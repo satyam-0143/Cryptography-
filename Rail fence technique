@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to encrypt plaintext using Rail Fence (Zigzag) transposition
+void encryptRailFence(char plaintext[], int railCount) {
+    int len = strlen(plaintext);
+    char railFence[railCount][len];
+    
+    // Initialize the railFence matrix with spaces
+    for (int i = 0; i < railCount; i++) {
+        for (int j = 0; j < len; j++) {
+            railFence[i][j] = ' ';
+        }
+    }
+    
+    int row = 0, col = 0;
+    int direction = 0; // Direction: 0 for down, 1 for up
+    
+    // Fill the railFence matrix with the characters from the plaintext
+    for (int i = 0; i < len; i++) {
+        if (row == 0) {
+            direction = 0; // Change direction when at the top rail
+        } else if (row == railCount - 1) {
+            direction = 1; // Change direction when at the bottom rail
+        }
+        
+        railFence[row][col] = plaintext[i];
+        
+        if (direction == 0) {
+            row++;
+        } else {
+            row--;
+        }
+        
+        col++;
+    }
+    
+    // Print the encrypted text from the railFence matrix
+    printf("Encrypted Text: ");
+    for (int i = 0; i < railCount; i++) {
+        for (int j = 0; j < len; j++) {
+            if (railFence[i][j] != ' ') {
+                printf("%c", railFence[i][j]);
+            }
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    char plaintext[1000];
+    int railCount;
+
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+
+    printf("Enter the number of rails: ");
+    scanf("%d", &railCount);
+
+    // Remove newline characters from input
+    strtok(plaintext, "\n");
+
+    encryptRailFence(plaintext, railCount);
+
+    return 0;
+}
