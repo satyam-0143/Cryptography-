@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+// Define SHA-512 constants
+#define SHA512_BLOCK_SIZE 128
+#define SHA512_DIGEST_SIZE 64
+
+// Functions for SHA-512
+void sha512(const char *input, uint64_t length, uint64_t hash[8]);
+void sha512_pad(const char *input, uint64_t length, char **padded, uint64_t *padded_length);
+
+int main() {
+    const char *input_string = "Hello, World!"; // Replace this with your input string
+
+    uint64_t hash[8];
+    sha512(input_string, strlen(input_string), hash);
+
+    printf("SHA-512 Hash: ");
+    for (int i = 0; i < 8; i++) {
+        printf("%016lx", hash[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+// Helper function to pad the input message
+void sha512_pad(const char *input, uint64_t length, char **padded, uint64_t *padded_length) {
+    // Implementation of padding rules according to SHA-512
+    // ...
+
+    // Example padding (assuming a simple message length):
+    *padded_length = length + 1;
+    *padded = (char *)malloc(*padded_length);
+    if (*padded == NULL) {
+        perror("Memory allocation failed");
+        exit(1);
+    }
+    memcpy(*padded, input, length);
+    (*padded)[length] = 0x80; // Add the 1-bit at the end
+
+    // Additional padding, if needed, for the message length
+    // ...
+
+    // Assuming you've added the message length to the padding as required
+}
+
+// SHA-512 algorithm implementation
+void sha512(const char *input, uint64_t length, uint64_t hash[8]) {
+    // Implementation of the SHA-512 algorithm
+    // ...
+
+    char *padded_input;
+    uint64_t padded_length;
+    sha512_pad(input, length, &padded_input, &padded_length);
+
+    // Initialize hash values
+    uint64_t h[8] = {
+        0x6a09e667f3bcc908ULL,
+        0xbb67ae8584caa73bULL,
+        0x3c6ef372fe94f82bULL,
+        0xa54ff53a5f1d36f1ULL,
+        0x510e527fade682d1ULL,
+        0x9b05688c2b3e6c1fULL,
+        0x1f83d9abfb41bd6bULL,
+        0x5be0cd19137e2179ULL
+    };
+
+    // Main loop
+    // ...
+
+    // Update the 'hash' array with the final hash values
+    memcpy(hash, h, SHA512_DIGEST_SIZE);
+
+    // Clean up allocated memory, if needed
+    free(padded_input);
+}
