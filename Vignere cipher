@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Function to encrypt plaintext using Vigenère cipher
+void encryptVigenere(char plaintext[], char keyword[]) {
+    int i, j = 0;
+    int len = strlen(plaintext);
+    int keywordLen = strlen(keyword);
+
+    for (i = 0; i < len; i++) {
+        char plainChar = plaintext[i];
+        char keyChar = keyword[j];
+
+        // Check if the character is alphabetic
+        if (isalpha(plainChar)) {
+            // Determine the shift amount based on the key character
+            int shift = tolower(keyChar) - 'a';
+
+            // Apply the shift to the plaintext character
+            if (isupper(plainChar)) {
+                plaintext[i] = 'A' + (plainChar - 'A' + shift) % 26;
+            } else {
+                plaintext[i] = 'a' + (plainChar - 'a' + shift) % 26;
+            }
+
+            // Move to the next character in the keyword (cycling if necessary)
+            j = (j + 1) % keywordLen;
+        }
+    }
+}
+
+int main() {
+    char plaintext[1000];
+    char keyword[100];
+
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+
+    printf("Enter the keyword: ");
+    fgets(keyword, sizeof(keyword), stdin);
+
+    // Remove newline characters from input
+    strtok(plaintext, "\n");
+    strtok(keyword, "\n");
+
+    encryptVigenere(plaintext, keyword);
+
+    printf("Encrypted Text: %s\n", plaintext);
+
+    return 0;
+}
