@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to perform Caesar cipher encryption
+void encrypt(char text[], int key) {
+    int i;
+    char encryptedText[strlen(text)];
+    for (i = 0; text[i] != '\0'; i++) {
+        char ch = text[i];
+        if (ch >= 'A' && ch <= 'Z') {
+            encryptedText[i] = ((ch - 'A' + key) % 26) + 'A';
+        } else if (ch >= 'a' && ch <= 'z') {
+            encryptedText[i] = ((ch - 'a' + key) % 26) + 'a';
+        } else {
+            encryptedText[i] = ch;
+        }
+    }
+    encryptedText[i] = '\0';
+    printf("Encrypted Text: %s\n", encryptedText);
+}
+
+// Function to perform Caesar cipher decryption
+void decrypt(char text[], int key) {
+    int i;
+    char decryptedText[strlen(text)];
+    for (i = 0; text[i] != '\0'; i++) {
+        char ch = text[i];
+        if (ch >= 'A' && ch <= 'Z') {
+            decryptedText[i] = ((ch - 'A' - key + 26) % 26) + 'A';
+        } else if (ch >= 'a' && ch <= 'z') {
+            decryptedText[i] = ((ch - 'a' - key + 26) % 26) + 'a';
+        } else {
+            decryptedText[i] = ch;
+        }
+    }
+    decryptedText[i] = '\0';
+    printf("Decrypted Text: %s\n", decryptedText);
+}
+
+int main() {
+    char text[100];
+    int key;
+
+    printf("Enter text to encrypt: ");
+    fgets(text, sizeof(text), stdin);
+
+    printf("Enter the key (a positive integer): ");
+    scanf("%d", &key);
+
+    // Encrypt the text
+    encrypt(text, key);
+
+    // Decrypt the text
+    decrypt(text, key);
+
+    return 0;
+}
