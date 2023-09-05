@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdint.h>
+
+// Initial permutation (IP)
+uint64_t initialPermutation(uint64_t data) {
+    // Replace with the actual IP permutation
+    return data;
+}
+
+// Simplified round function
+uint32_t round(uint32_t data, uint32_t key) {
+    // Replace with the actual DES round logic
+    return data ^ key;
+}
+
+// Simplified DES encryption function
+uint64_t desEncrypt(uint64_t plaintext, uint64_t key) {
+    uint64_t ipResult = initialPermutation(plaintext);
+    uint32_t left = (uint32_t)(ipResult >> 32);
+    uint32_t right = (uint32_t)ipResult;
+
+    // Example: Perform 16 simplified rounds
+    for (int round = 0; round < 16; round++) {
+        uint32_t temp = left;
+        left = right;
+        right = temp ^ round(key, round); // Key schedule needed
+    }
+
+    // Final permutation (FP)
+    uint64_t ciphertext = ((uint64_t)right << 32) | (uint64_t)left;
+    // Replace with the actual FP permutation
+
+    return ciphertext;
+}
+
+int main() {
+    uint64_t plaintext = 0x0123456789ABCDEF; // 64-bit plaintext
+    uint64_t key = 0x133457799BBCDFF1;      // 64-bit key
+
+    uint64_t ciphertext = desEncrypt(plaintext, key);
+
+    printf("Plaintext: 0x%llx\n", (unsigned long long)plaintext);
+    printf("Ciphertext: 0x%llx\n", (unsigned long long)ciphertext);
+
+    return 0;
+}
