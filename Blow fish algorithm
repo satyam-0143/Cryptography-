@@ -1,0 +1,61 @@
+include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+
+#define N 16 // Number of subkeys
+
+// Blowfish data structures
+typedef uint32_t uint32;
+typedef uint64_t uint64;
+
+typedef struct {
+    uint32 P[N + 2];
+    uint32 S[4][256];
+} BlowfishContext;
+
+// Function prototypes
+void BlowfishInit(BlowfishContext *ctx, const uint8_t *key, size_t keylen);
+void BlowfishEncrypt(BlowfishContext *ctx, uint32 *xl, uint32 *xr);
+void BlowfishDecrypt(BlowfishContext *ctx, uint32 *xl, uint32 *xr);
+
+// Blowfish initialization function
+void BlowfishInit(BlowfishContext *ctx, const uint8_t *key, size_t keylen) {
+    // Initialize P-array and S-boxes here based on the key
+    // This is where you would implement key expansion
+}
+
+// Blowfish encryption function
+void BlowfishEncrypt(BlowfishContext *ctx, uint32 *xl, uint32 *xr) {
+    // Implement Blowfish encryption here
+}
+
+// Blowfish decryption function
+void BlowfishDecrypt(BlowfishContext *ctx, uint32 *xl, uint32 *xr) {
+    // Implement Blowfish decryption here
+}
+
+int main() {
+    BlowfishContext ctx;
+    const uint8_t key[] = "MySecretKey"; // Replace with your key
+    const char *plaintext = "Hello, World!";
+
+    size_t keylen = strlen((const char *)key);
+    size_t plaintextlen = strlen(plaintext);
+
+    BlowfishInit(&ctx, key, keylen);
+
+    printf("Original Text: %s\n", plaintext);
+
+    for (size_t i = 0; i < plaintextlen; i += 8) {
+        uint32 xl = *(uint32 *)(plaintext + i);
+        uint32 xr = *(uint32 *)(plaintext + i + 4);
+
+        BlowfishEncrypt(&ctx, &xl, &xr);
+        printf("Encrypted: %08X %08X\n", xl, xr);
+
+        BlowfishDecrypt(&ctx, &xl, &xr);
+        printf("Decrypted: %08X %08X\n", xl, xr);
+    }
+
+    return 0;
+}
