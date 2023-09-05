@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <openssl/sha.h>
+
+int main() {
+    char input_string[] = "Hello, World!"; // Replace this with your input string
+    unsigned char digest[SHA_DIGEST_LENGTH];
+    SHA_CTX sha1Context;
+
+    SHA1_Init(&sha1Context);
+    SHA1_Update(&sha1Context, input_string, strlen(input_string));
+    SHA1_Final(digest, &sha1Context);
+
+    printf("SHA-1 Hash: ");
+    for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
+        printf("%02x", digest[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
