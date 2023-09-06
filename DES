@@ -1,46 +1,45 @@
 #include <stdio.h>
 #include <stdint.h>
+uint64_t key = 0x133457799BBCDFF1; 
+uint64_t plaintext = 0x0123456789ABCDEF;
+int initial_permutation[] = {
+    58, 50, 42, 34, 26, 18, 10, 2,
+    60, 52, 44, 36, 28, 20, 12, 4,
+    62, 54, 46, 38, 30, 22, 14, 6,
+    64, 56, 48, 40, 32, 24, 16, 8,
+    57, 49, 41, 33, 25, 17, 9, 1,
+    59, 51, 43, 35, 27, 19, 11, 3,
+    61, 53, 45, 37, 29, 21, 13, 5,
+    63, 55, 47, 39, 31, 23, 15, 7
+};
 
-// Initial permutation (IP)
-uint64_t initialPermutation(uint64_t data) {
-    // Replace with the actual IP permutation
-    return data;
-}
+uint32_t des_round(uint32_t data, uint32_t round_key) {
+    uint32_t expanded_data = 0; 
+    uint32_t substituted_data = expanded_data ^ round_key; 
 
-// Simplified round function
-uint32_t round(uint32_t data, uint32_t key) {
-    // Replace with the actual DES round logic
-    return data ^ key;
-}
-
-// Simplified DES encryption function
-uint64_t desEncrypt(uint64_t plaintext, uint64_t key) {
-    uint64_t ipResult = initialPermutation(plaintext);
-    uint32_t left = (uint32_t)(ipResult >> 32);
-    uint32_t right = (uint32_t)ipResult;
-
-    // Example: Perform 16 simplified rounds
-    for (int round = 0; round < 16; round++) {
-        uint32_t temp = left;
-        left = right;
-        right = temp ^ round(key, round); // Key schedule needed
-    }
-
-    // Final permutation (FP)
-    uint64_t ciphertext = ((uint64_t)right << 32) | (uint64_t)left;
-    // Replace with the actual FP permutation
-
-    return ciphertext;
+    return substituted_data;
 }
 
 int main() {
-    uint64_t plaintext = 0x0123456789ABCDEF; // 64-bit plaintext
-    uint64_t key = 0x133457799BBCDFF1;      // 64-bit key
+    uint64_t permuted_data = 0;
+    for (int i = 0; i < 64; i++) {
+        int bit_pos = initial_permutation[i] - 1;
+        uint64_t bit = (plaintext >> bit_pos) & 1;
+        permuted_data |= (bit << (63 - i));
+    }
 
-    uint64_t ciphertext = desEncrypt(plaintext, key);
+   
+    uint32_t left = permuted_data >> 32;
+    uint32_t right = (uint32_t) permuted_data;
 
-    printf("Plaintext: 0x%llx\n", (unsigned long long)plaintext);
-    printf("Ciphertext: 0x%llx\n", (unsigned long long)ciphertext);
+    uint32_t round_key = (uint32_t) (key >> 32); // Extract 
+    uint32_t new_right = des_round(right, round_key);
 
-    return 0;
+   
+    uint64_t ciphertext = ((uint64_t) left << 32) | new_right;
+
+    printf("Plaintext: 0x%016llX\n", plaintext);
+    printf("Ciphertext: 0x%016llX\n", ciphertext);
+
+   return 0;
 }
